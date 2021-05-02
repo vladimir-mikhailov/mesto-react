@@ -1,5 +1,5 @@
 import React from 'react';
-import api from '../utils/Api';
+import api from '../utils/api';
 import Card from './Card';
 
 function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
@@ -26,7 +26,6 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
         setCards(items);
       })
       .catch(err => console.log(err));
-    return () => {};
   }, []);
 
   return (

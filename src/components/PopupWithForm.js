@@ -7,10 +7,8 @@ function PopupWithForm({ title, name, isOpen, onClose, onSubmit, children }) {
     }
 
     document.addEventListener('keydown', handleEscClose);
-    return () => {
-      document.removeEventListener('keydown', handleEscClose);
-    };
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function handleClickOnOverlay(evt) {
     evt.target === evt.currentTarget && onClose();
@@ -18,7 +16,7 @@ function PopupWithForm({ title, name, isOpen, onClose, onSubmit, children }) {
 
   return (
     <div
-      className={`popup popup_type_${name}${isOpen && ' popup_open'}`}
+      className={`popup popup_type_${name}${isOpen ? ' popup_open' : ''}`}
       onClick={handleClickOnOverlay}
     >
       <div className='popup__container popup__container_type_form'>

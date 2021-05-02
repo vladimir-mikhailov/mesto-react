@@ -7,10 +7,8 @@ function ImagePopup({ card, isOpen, onClose }) {
     }
 
     document.addEventListener('keydown', handleEscClose);
-    return () => {
-      document.removeEventListener('keydown', handleEscClose);
-    };
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function handleClickOnOverlay(evt) {
     evt.target === evt.currentTarget && onClose();
@@ -18,7 +16,7 @@ function ImagePopup({ card, isOpen, onClose }) {
 
   return (
     <div
-      className={`popup popup_type_big-picture ${isOpen && ' popup_open'}`}
+      className={`popup popup_type_big-picture${isOpen ? ' popup_open' : ''}`}
       onClick={handleClickOnOverlay}
     >
       <div className='popup__container'>
@@ -30,7 +28,7 @@ function ImagePopup({ card, isOpen, onClose }) {
         />
         <figure className='figure'>
           <img src={card.link} alt={card.name} className='big-image' />
-          <figcaption className='big-image-caption' />
+          <figcaption className='big-image-caption'>{card.name}</figcaption>
         </figure>
       </div>
     </div>

@@ -81,141 +81,106 @@ function App() {
         title='Обновить аватар'
         isOpen={isEditAvatarPopupOpen}
         onClose={closeAllPopups}
-        children={
-          <>
-            <input
-              type='url'
-              id='profile-avatar'
-              className='form__input'
-              name='avatar'
-              placeholder='Ссылка на изображение'
-              required
-            />
-            <span className='form__input-error profile-avatar-input-error' />
-            <button
-              className='form__button'
-              type='submit'
-              aria-label='Сохранить'
-              value='Сохранить'
-              name='avatar-save'
-            >
-              Сохранить
-            </button>
-          </>
-        }
-      />
+      >
+        <input
+          type='url'
+          id='profile-avatar'
+          className='form__input'
+          name='avatar'
+          placeholder='Ссылка на изображение'
+          required
+        />
+        <span className='form__input-error profile-avatar-input-error' />
+        <button
+          className='form__button'
+          type='submit'
+          aria-label='Сохранить'
+          value='Сохранить'
+          name='avatar-save'
+        >
+          Сохранить
+        </button>
+      </PopupWithForm>
       <PopupWithForm
         name='edit-form'
         title='Редактировать профиль'
         isOpen={isEditProfilePopupOpen}
         onClose={closeAllPopups}
-        children={
-          <>
-            <input
-              type='text'
-              id='profile-name'
-              className='form__input form__input_type_name'
-              name='name'
-              placeholder='Имя'
-              minLength='2'
-              maxLength='40'
-              required
-            />
-            <span className='form__input-error profile-name-input-error' />
-            <input
-              type='text'
-              id='profile-description'
-              className='form__input form__input_type_description'
-              name='about'
-              placeholder='О себе'
-              minLength='2'
-              maxLength='200'
-              required
-            />
-            <span className='form__input-error profile-description-input-error' />
-            <button
-              className='form__button'
-              type='submit'
-              aria-label='Сохранить профиль'
-              value='Сохранить'
-              name='profile-save'
-            >
-              Сохранить
-            </button>
-          </>
-        }
-      />
+      >
+        <input
+          type='text'
+          id='profile-name'
+          className='form__input form__input_type_name'
+          name='name'
+          placeholder='Имя'
+          minLength='2'
+          maxLength='40'
+          required
+        />
+        <span className='form__input-error profile-name-input-error' />
+        <input
+          type='text'
+          id='profile-description'
+          className='form__input form__input_type_description'
+          name='about'
+          placeholder='О себе'
+          minLength='2'
+          maxLength='200'
+          required
+        />
+        <span className='form__input-error profile-description-input-error' />
+        <button
+          className='form__button'
+          type='submit'
+          aria-label='Сохранить профиль'
+          value='Сохранить'
+          name='profile-save'
+        >
+          Сохранить
+        </button>
+      </PopupWithForm>
       <PopupWithForm
         name='add-card-form'
         title='Новое место'
         isOpen={isAddPlacePopupOpen}
         onClose={closeAllPopups}
         /*onSubmit={handleAddPlaceSubmit}*/
-        children={
-          <>
-            <input
-              type='text'
-              id='place-name'
-              className='form__input place-name'
-              name='name'
-              placeholder='Название'
-              minLength='2'
-              maxLength='30'
-              required
-            />
-            <span className='form__input-error place-name-input-error' />
-            <input
-              type='url'
-              id='place-img-src'
-              className='form__input place-link'
-              name='link'
-              placeholder='Ссылка на картинку'
-              required
-            />
-            <span className='form__input-error place-img-src-input-error' />
-            <button
-              className='form__button'
-              type='submit'
-              aria-label='Создать новую карточку'
-              value='Создать'
-              name='create-card'
-            >
-              Создать
-            </button>
-          </>
-        }
-      />
+      >
+        <input
+          type='text'
+          id='place-name'
+          className='form__input place-name'
+          name='name'
+          placeholder='Название'
+          minLength='2'
+          maxLength='30'
+          required
+        />
+        <span className='form__input-error place-name-input-error' />
+        <input
+          type='url'
+          id='place-img-src'
+          className='form__input place-link'
+          name='link'
+          placeholder='Ссылка на картинку'
+          required
+        />
+        <span className='form__input-error place-img-src-input-error' />
+        <button
+          className='form__button'
+          type='submit'
+          aria-label='Создать новую карточку'
+          value='Создать'
+          name='create-card'
+        >
+          Создать
+        </button>
+      </PopupWithForm>
       <ImagePopup
         card={selectedCard}
         isOpen={isImagePopupOpen}
         onClose={closeAllPopups}
       />
-      <div className='popup popup_type_delete-card-form'>
-        <div className='popup__container popup__container_type_form'>
-          <button
-            className='popup__button-close'
-            type='button'
-            aria-label='Закрыть попап'
-          />
-          <form className='form form_delete-card' name='delete-card'>
-            <h2 className='form__title'>Вы уверены?</h2>
-            <input
-              type='text'
-              className='form__input form__input_type_hidden form__input_type_id'
-              name='id'
-            />
-            <button
-              className='form__button'
-              type='submit'
-              aria-label='Удалить'
-              value='Удалить'
-              name='delete-card'
-            >
-              Да
-            </button>
-          </form>
-        </div>
-      </div>
     </div>
   );
 }
