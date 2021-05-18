@@ -1,4 +1,4 @@
-import {apiData} from "./utils";
+import { apiData } from './utils';
 
 class Api {
   constructor(options) {
@@ -15,7 +15,7 @@ class Api {
       headers: {
         authorization: this.authToken,
       },
-    }).then((res) => this._handleResponse(res));
+    }).then(res => this._handleResponse(res));
   }
 
   addCard(newCard) {
@@ -26,7 +26,7 @@ class Api {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(newCard),
-    }).then((res) => this._handleResponse(res));
+    }).then(res => this._handleResponse(res));
   }
 
   deleteCard(cardId) {
@@ -35,16 +35,16 @@ class Api {
       headers: {
         authorization: this.authToken,
       },
-    }).then((res) => this._handleResponse(res));
+    }).then(res => this._handleResponse(res));
   }
 
-  toggleLikeCard(cardId, isLiked) {
+  changeLikeCardStatus(cardId, isLiked) {
     return fetch(`${this.baseUrl}/cards/likes/${cardId}`, {
       method: `${isLiked ? 'DELETE' : 'PUT'}`,
       headers: {
         authorization: this.authToken,
       },
-    }).then((res) => this._handleResponse(res));
+    }).then(res => this._handleResponse(res));
   }
 
   getUserInfo() {
@@ -52,10 +52,10 @@ class Api {
       headers: {
         authorization: this.authToken,
       },
-    }).then((res) => this._handleResponse(res));
+    }).then(res => this._handleResponse(res));
   }
 
-  updateUserInfo(userData) {
+  setUserInfo(userData) {
     return fetch(`${this.baseUrl}/users/me`, {
       method: 'PATCH',
       headers: {
@@ -66,7 +66,7 @@ class Api {
         name: userData.name,
         about: userData.about,
       }),
-    }).then((res) => this._handleResponse(res));
+    }).then(res => this._handleResponse(res));
   }
 
   updateUserAvatar(userData) {
@@ -79,7 +79,7 @@ class Api {
       body: JSON.stringify({
         avatar: userData.avatar,
       }),
-    }).then((res) => this._handleResponse(res));
+    }).then(res => this._handleResponse(res));
   }
 }
 
@@ -88,4 +88,4 @@ const api = new Api({
   authToken: apiData.authToken,
 });
 
-export default api
+export default api;
