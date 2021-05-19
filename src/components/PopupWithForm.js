@@ -27,7 +27,7 @@ function PopupWithForm({ title, name, isOpen, onClose, onSubmit, children }) {
           onClick={onClose}
         />
         <form
-          className='form form_edit'
+          className={`form ${name}`}
           name={name}
           onSubmit={onSubmit}
           noValidate

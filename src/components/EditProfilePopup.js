@@ -3,21 +3,39 @@ import { useState, useContext, useEffect } from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser, isSaving }) {
+  const currentUser = useContext(CurrentUserContext);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const currentUser = useContext(CurrentUserContext);
+  const [isFormValid, setIsFormValid] = useState(true);
+  const [inputList, setInputList] = useState([]);
 
   useEffect(() => {
     setName(currentUser.name);
     setDescription(currentUser.about);
   }, [currentUser]);
 
+  useEffect(() => {
+    setInputList(() =>
+      Array.from(
+        document.querySelector('.edit-form').querySelectorAll('.form__input'),
+      ),
+    );
+  }, []);
+
+  function inputsValidation() {
+    inputList.some(inputElement => !inputElement.validity.valid)
+      ? setIsFormValid(false)
+      : setIsFormValid(true);
+  }
+
   function handleNameChange(e) {
     setName(e.target.value);
+    inputsValidation();
   }
 
   function handleDescriptionChange(e) {
     setDescription(e.target.value);
+    inputsValidation();
   }
 
   function handleSubmit(e) {
@@ -49,7 +67,17 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, isSaving }) {
         onChange={handleNameChange}
         value={name || ''}
       />
-      <span className='form__input-error profile-name-input-error' />
+      {isOpen && (
+        <span
+          className={`form__input-error${
+            inputList.find(i => i.name === 'name').validity.valid
+              ? ''
+              : ' form__input-error_visible'
+          }`}
+        >
+          {inputList.find(i => i.name === 'name').validationMessage}
+        </span>
+      )}
       <input
         type='text'
         id='profile-description'
@@ -62,13 +90,25 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, isSaving }) {
         onChange={handleDescriptionChange}
         value={description || ''}
       />
-      <span className='form__input-error profile-description-input-error' />
+      {isOpen && (
+        <span
+          className={`form__input-error${
+            inputList.find(i => i.name === 'about').validity.valid
+              ? ''
+              : ' form__input-error_visible'
+          }`}
+        >
+          {inputList.find(i => i.name === 'about').validationMessage}
+        </span>
+      )}
+
       <button
-        className='form__button'
+        className={`form__button${isFormValid ? '' : ' form__button_disabled'}`}
         type='submit'
         aria-label='Сохранить профиль'
         name='profile-save'
         value='Сохранить'
+        disabled={!isFormValid}
       >
         {isSaving ? 'Сохранение...' : 'Сохранить'}
       </button>

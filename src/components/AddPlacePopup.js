@@ -1,16 +1,44 @@
 import PopupWithForm from './PopupWithForm';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function AddPlacePopup({ isOpen, onClose, onAddPlace, isSaving }) {
   const [placeName, setPlaceName] = useState('');
   const [placeImage, setPlaceImage] = useState('');
+  const [isFormValid, setIsFormValid] = useState(true);
+  const [inputList, setInputList] = useState([]);
+  const [validationMessages, setValidationMessages] = useState({
+    name: '',
+    link: '',
+  });
+
+  useEffect(() => {
+    setInputList(() =>
+      Array.from(
+        document
+          .querySelector('.add-card-form')
+          .querySelectorAll('.form__input'),
+      ),
+    );
+  }, []);
+
+  function inputsValidation() {
+    inputList.some(inputElement => !inputElement.validity.valid)
+      ? setIsFormValid(false)
+      : setIsFormValid(true);
+    setValidationMessages({
+      name: inputList.find(i => i.name === 'name').validationMessage,
+      link: inputList.find(i => i.name === 'link').validationMessage,
+    });
+  }
 
   function handlePlaceNameChange(e) {
     setPlaceName(e.target.value);
+    inputsValidation();
   }
 
   function handlePlaceImageChange(e) {
     setPlaceImage(e.target.value);
+    inputsValidation();
   }
 
   function handleSubmit(e) {
@@ -40,10 +68,18 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, isSaving }) {
         minLength='2'
         maxLength='30'
         required
-        value={placeName}
+        value={placeName || ''}
         onChange={handlePlaceNameChange}
       />
-      <span className='form__input-error place-name-input-error' />
+      {isOpen && (
+        <span
+          className={`form__input-error${
+            validationMessages.name === '' ? '' : ' form__input-error_visible'
+          }`}
+        >
+          {validationMessages.name}
+        </span>
+      )}
       <input
         type='url'
         id='place-img-src'
@@ -51,16 +87,21 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, isSaving }) {
         name='link'
         placeholder='Ссылка на картинку'
         required
-        value={placeImage}
+        value={placeImage || ''}
         onChange={handlePlaceImageChange}
       />
-      <span className='form__input-error place-img-src-input-error' />
+      {isOpen && (
+        <span className='form__input-error form__input-error_visible'>
+          {validationMessages.link}
+        </span>
+      )}
       <button
-        className='form__button'
+        className={`form__button${isFormValid ? '' : ' form__button_disabled'}`}
         type='submit'
         aria-label='Создать новую карточку'
         value='Создать'
         name='create-card'
+        disabled={!isFormValid}
       >
         {isSaving ? 'Создание...' : 'Создать'}
       </button>

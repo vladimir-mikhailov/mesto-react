@@ -1,8 +1,21 @@
 import PopupWithForm from './PopupWithForm';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isSaving }) {
   const inputRef = useRef();
+  const [isFormValid, setIsFormValid] = useState(true);
+  const [validationMessage, setValidationMessage] = useState('');
+
+  function inputsValidation() {
+    inputRef.current.validity.valid
+      ? setIsFormValid(false)
+      : setIsFormValid(true);
+  }
+
+  function handleChange() {
+    inputsValidation();
+    setValidationMessage(inputRef.current.validationMessage);
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -28,13 +41,23 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isSaving }) {
         placeholder='Ссылка на изображение'
         required
         ref={inputRef}
+        onChange={handleChange}
       />
-      <span className='form__input-error profile-avatar-input-error' />
+      {isOpen && (
+        <span
+          className={`form__input-error${
+            inputRef.current.validity.valid ? '' : ' form__input-error_visible'
+          }`}
+        >
+          {validationMessage}
+        </span>
+      )}
       <button
-        className='form__button'
+        className={`form__button${isFormValid ? '' : ' form__button_disabled'}`}
         type='submit'
         aria-label='Сохранить'
         name='avatar-save'
+        disabled={!isFormValid}
       >
         {isSaving ? 'Сохранение...' : 'Сохранить'}
       </button>

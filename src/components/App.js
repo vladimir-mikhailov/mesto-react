@@ -60,7 +60,7 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsImagePopupOpen(false);
     setSelectedCard({});
-    setTimeout(() => setIsSaving(false), 2000);
+    setTimeout(() => setIsSaving(false), 300);
   }
 
   function handleUpdateUser(user) {
