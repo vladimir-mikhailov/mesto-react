@@ -8,8 +8,8 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isSaving }) {
 
   function inputsValidation() {
     inputRef.current.validity.valid
-      ? setIsFormValid(false)
-      : setIsFormValid(true);
+      ? setIsFormValid(true)
+      : setIsFormValid(false);
   }
 
   function handleChange() {
