@@ -4,47 +4,29 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser, isSaving }) {
   const currentUser = useContext(CurrentUserContext);
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [isFormValid, setIsFormValid] = useState(true);
-  const [inputList, setInputList] = useState([]);
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [values, setValues] = useState({});
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    setName(currentUser.name);
-    setDescription(currentUser.about);
-  }, [currentUser]);
+    setValues(currentUser);
+    setIsFormValid(false);
+  }, [currentUser, isOpen]);
 
-  useEffect(() => {
-    setInputList(() =>
-      Array.from(
-        document.querySelector('.edit-form').querySelectorAll('.form__input'),
-      ),
-    );
-  }, []);
-
-  function inputsValidation() {
-    inputList.some(inputElement => !inputElement.validity.valid)
-      ? setIsFormValid(false)
-      : setIsFormValid(true);
+  function formValidation(input) {
+    setIsFormValid(input.closest('form').checkValidity());
   }
 
-  function handleNameChange(e) {
-    setName(e.target.value);
-    inputsValidation();
-  }
-
-  function handleDescriptionChange(e) {
-    setDescription(e.target.value);
-    inputsValidation();
-  }
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value });
+    setErrors({ ...errors, [name]: e.target.validationMessage });
+    formValidation(e.target);
+  };
 
   function handleSubmit(e) {
     e.preventDefault();
-
-    onUpdateUser({
-      name,
-      about: description,
-    });
+    onUpdateUser(values);
   }
 
   return (
@@ -54,6 +36,9 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, isSaving }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      isFormValid={isFormValid}
+      isSaving={isSaving}
+      buttonValues={{ isSaving: 'Сохранение...', default: 'Сохранить' }}
     >
       <input
         type='text'
@@ -64,18 +49,16 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, isSaving }) {
         minLength='2'
         maxLength='40'
         required
-        onChange={handleNameChange}
-        value={name || ''}
+        onChange={handleChange}
+        value={values.name || ''}
       />
       {isOpen && (
         <span
           className={`form__input-error${
-            inputList.find(i => i.name === 'name').validity.valid
-              ? ''
-              : ' form__input-error_visible'
+            errors.name === '' ? '' : ' form__input-error_visible'
           }`}
         >
-          {inputList.find(i => i.name === 'name').validationMessage}
+          {errors.name}
         </span>
       )}
       <input
@@ -87,31 +70,18 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, isSaving }) {
         minLength='2'
         maxLength='200'
         required
-        onChange={handleDescriptionChange}
-        value={description || ''}
+        onChange={handleChange}
+        value={values.about || ''}
       />
       {isOpen && (
         <span
           className={`form__input-error${
-            inputList.find(i => i.name === 'about').validity.valid
-              ? ''
-              : ' form__input-error_visible'
+            errors.about === '' ? '' : ' form__input-error_visible'
           }`}
         >
-          {inputList.find(i => i.name === 'about').validationMessage}
+          {errors.about}
         </span>
       )}
-
-      <button
-        className={`form__button${isFormValid ? '' : ' form__button_disabled'}`}
-        type='submit'
-        aria-label='Сохранить профиль'
-        name='profile-save'
-        value='Сохранить'
-        disabled={!isFormValid}
-      >
-        {isSaving ? 'Сохранение...' : 'Сохранить'}
-      </button>
     </PopupWithForm>
   );
 }

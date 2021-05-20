@@ -40,6 +40,15 @@ function App() {
       .catch(err => console.log(err));
   }, []);
 
+  useEffect(() => {
+    function handleEscClose(evt) {
+      if (evt.key === 'Escape') closeAllPopups();
+    }
+
+    document.addEventListener('keydown', handleEscClose);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function handleDeleteCardClick(card) {
     setCardToDelete(card);
     setIsDeleteCardPopupOpen(true);

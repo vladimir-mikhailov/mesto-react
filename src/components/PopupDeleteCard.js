@@ -13,16 +13,10 @@ function PopupDeleteCard({ isOpen, onClose, isSaving, card, onDelete }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-    >
-      <button
-        className='form__button'
-        type='submit'
-        aria-label='Удалить'
-        name='avatar-save'
-      >
-        {isSaving ? 'Удаление...' : 'Удалить'}
-      </button>
-    </PopupWithForm>
+      isSaving={isSaving}
+      isFormValid={true}
+      buttonValues={{ isSaving: 'Удаление...', default: 'Удалить' }}
+    />
   );
 }
 

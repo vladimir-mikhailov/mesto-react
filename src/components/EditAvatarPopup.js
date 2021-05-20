@@ -3,18 +3,16 @@ import { useRef, useState } from 'react';
 
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isSaving }) {
   const inputRef = useRef();
-  const [isFormValid, setIsFormValid] = useState(true);
+  const [isFormValid, setIsFormValid] = useState(false);
   const [validationMessage, setValidationMessage] = useState('');
 
-  function inputsValidation() {
-    inputRef.current.validity.valid
-      ? setIsFormValid(true)
-      : setIsFormValid(false);
+  function inputsValidation(input) {
+    input.validity.valid ? setIsFormValid(true) : setIsFormValid(false);
   }
 
-  function handleChange() {
-    inputsValidation();
-    setValidationMessage(inputRef.current.validationMessage);
+  function handleChange(e) {
+    inputsValidation(e.target);
+    setValidationMessage(e.target.validationMessage);
   }
 
   function handleSubmit(e) {
@@ -32,6 +30,9 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isSaving }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      isFormValid={isFormValid}
+      isSaving={isSaving}
+      buttonValues={{ isSaving: 'Сохранение...', default: 'Сохранить' }}
     >
       <input
         type='url'
@@ -46,21 +47,12 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isSaving }) {
       {isOpen && (
         <span
           className={`form__input-error${
-            inputRef.current.validity.valid ? '' : ' form__input-error_visible'
+            isFormValid ? '' : ' form__input-error_visible'
           }`}
         >
           {validationMessage}
         </span>
       )}
-      <button
-        className={`form__button${isFormValid ? '' : ' form__button_disabled'}`}
-        type='submit'
-        aria-label='Сохранить'
-        name='avatar-save'
-        disabled={!isFormValid}
-      >
-        {isSaving ? 'Сохранение...' : 'Сохранить'}
-      </button>
     </PopupWithForm>
   );
 }

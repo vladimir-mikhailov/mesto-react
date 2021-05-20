@@ -1,15 +1,4 @@
-import React, { useEffect } from 'react';
-
 function ImagePopup({ card, isOpen, onClose }) {
-  useEffect(() => {
-    function handleEscClose(evt) {
-      if (evt.key === 'Escape') onClose();
-    }
-
-    document.addEventListener('keydown', handleEscClose);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   function handleClickOnOverlay(evt) {
     evt.target === evt.currentTarget && onClose();
   }

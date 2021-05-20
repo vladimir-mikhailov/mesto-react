@@ -1,15 +1,14 @@
-import React, { useEffect } from 'react';
-
-function PopupWithForm({ title, name, isOpen, onClose, onSubmit, children }) {
-  useEffect(() => {
-    function handleEscClose(evt) {
-      if (evt.key === 'Escape') onClose();
-    }
-
-    document.addEventListener('keydown', handleEscClose);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+function PopupWithForm({
+  title,
+  name,
+  isOpen,
+  onClose,
+  onSubmit,
+  children,
+  isFormValid,
+  isSaving,
+  buttonValues,
+}) {
   function handleClickOnOverlay(evt) {
     evt.target === evt.currentTarget && onClose();
   }
@@ -34,6 +33,17 @@ function PopupWithForm({ title, name, isOpen, onClose, onSubmit, children }) {
         >
           <h2 className='form__title'>{title}</h2>
           {children}
+          <button
+            className={`form__button${
+              isFormValid ? '' : ' form__button_disabled'
+            }`}
+            type='submit'
+            aria-label={buttonValues.default}
+            name={name}
+            disabled={!isFormValid}
+          >
+            {isSaving ? buttonValues.isSaving : buttonValues.default}
+          </button>
         </form>
       </div>
     </div>

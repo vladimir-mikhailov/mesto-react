@@ -1,54 +1,23 @@
 import PopupWithForm from './PopupWithForm';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 function AddPlacePopup({ isOpen, onClose, onAddPlace, isSaving }) {
-  const [placeName, setPlaceName] = useState('');
-  const [placeImage, setPlaceImage] = useState('');
-  const [isFormValid, setIsFormValid] = useState(true);
-  const [inputList, setInputList] = useState([]);
-  const [validationMessages, setValidationMessages] = useState({
-    name: '',
-    link: '',
-  });
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [values, setValues] = useState({});
+  const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    setInputList(() =>
-      Array.from(
-        document
-          .querySelector('.add-card-form')
-          .querySelectorAll('.form__input'),
-      ),
-    );
-  }, []);
-
-  function inputsValidation() {
-    inputList.some(inputElement => !inputElement.validity.valid)
-      ? setIsFormValid(false)
-      : setIsFormValid(true);
-    setValidationMessages({
-      name: inputList.find(i => i.name === 'name').validationMessage,
-      link: inputList.find(i => i.name === 'link').validationMessage,
-    });
-  }
-
-  function handlePlaceNameChange(e) {
-    setPlaceName(e.target.value);
-    inputsValidation();
-  }
-
-  function handlePlaceImageChange(e) {
-    setPlaceImage(e.target.value);
-    inputsValidation();
-  }
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value });
+    setErrors({ ...errors, [name]: e.target.validationMessage });
+    setIsFormValid(e.target.closest('form').checkValidity());
+  };
 
   function handleSubmit(e) {
     e.preventDefault();
-    onAddPlace({
-      name: placeName,
-      link: placeImage,
-    });
-    setPlaceName('');
-    setPlaceImage('');
+    onAddPlace(values);
+    setValues({});
+    setErrors({});
   }
 
   return (
@@ -58,6 +27,9 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, isSaving }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      isFormValid={isFormValid}
+      isSaving={isSaving}
+      buttonValues={{ isSaving: 'Создание...', default: 'Создать' }}
     >
       <input
         type='text'
@@ -68,16 +40,16 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, isSaving }) {
         minLength='2'
         maxLength='30'
         required
-        value={placeName || ''}
-        onChange={handlePlaceNameChange}
+        value={values.name}
+        onChange={handleChange}
       />
       {isOpen && (
         <span
           className={`form__input-error${
-            validationMessages.name === '' ? '' : ' form__input-error_visible'
+            errors.name === '' ? '' : ' form__input-error_visible'
           }`}
         >
-          {validationMessages.name}
+          {errors.name}
         </span>
       )}
       <input
@@ -87,24 +59,18 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, isSaving }) {
         name='link'
         placeholder='Ссылка на картинку'
         required
-        value={placeImage || ''}
-        onChange={handlePlaceImageChange}
+        value={values.link}
+        onChange={handleChange}
       />
       {isOpen && (
-        <span className='form__input-error form__input-error_visible'>
-          {validationMessages.link}
+        <span
+          className={`form__input-error${
+            errors.link === '' ? '' : ' form__input-error_visible'
+          }`}
+        >
+          {errors.link}
         </span>
       )}
-      <button
-        className={`form__button${isFormValid ? '' : ' form__button_disabled'}`}
-        type='submit'
-        aria-label='Создать новую карточку'
-        value='Создать'
-        name='create-card'
-        disabled={!isFormValid}
-      >
-        {isSaving ? 'Создание...' : 'Создать'}
-      </button>
     </PopupWithForm>
   );
 }
