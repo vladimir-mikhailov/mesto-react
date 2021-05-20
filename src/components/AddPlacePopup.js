@@ -1,10 +1,16 @@
 import PopupWithForm from './PopupWithForm';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function AddPlacePopup({ isOpen, onClose, onAddPlace, isSaving }) {
   const [isFormValid, setIsFormValid] = useState(false);
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    setValues({});
+    setErrors({});
+    setIsFormValid(false);
+  }, [isOpen]);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -40,7 +46,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, isSaving }) {
         minLength='2'
         maxLength='30'
         required
-        value={values.name}
+        value={values.name || ''}
         onChange={handleChange}
       />
       {isOpen && (
@@ -59,7 +65,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, isSaving }) {
         name='link'
         placeholder='Ссылка на картинку'
         required
-        value={values.link}
+        value={values.link || ''}
         onChange={handleChange}
       />
       {isOpen && (
