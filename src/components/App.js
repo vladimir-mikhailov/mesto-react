@@ -42,9 +42,8 @@ function App() {
 
   useEffect(() => {
     function handleEscClose(evt) {
-      if (evt.key === 'Escape') closeAllPopups();
+      evt.key === 'Escape' && closeAllPopups();
     }
-
     document.addEventListener('keydown', handleEscClose);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
