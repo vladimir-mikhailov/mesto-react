@@ -4,15 +4,15 @@ import { useRef, useState } from 'react';
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isSaving }) {
   const inputRef = useRef();
   const [isFormValid, setIsFormValid] = useState(false);
-  const [validationMessage, setValidationMessage] = useState('');
+  const [error, setError] = useState('');
 
-  function inputsValidation(input) {
-    input.validity.valid ? setIsFormValid(true) : setIsFormValid(false);
+  function formValidation(input) {
+    setIsFormValid(input.closest('form').checkValidity());
   }
 
   function handleChange(e) {
-    inputsValidation(e.target);
-    setValidationMessage(e.target.validationMessage);
+    formValidation(e.target);
+    setError(e.target.validationMessage);
   }
 
   function handleSubmit(e) {
@@ -50,7 +50,7 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isSaving }) {
             isFormValid ? '' : ' form__input-error_visible'
           }`}
         >
-          {validationMessage}
+          {error}
         </span>
       )}
     </PopupWithForm>
